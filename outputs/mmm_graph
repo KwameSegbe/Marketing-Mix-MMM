@@ -1,0 +1,95 @@
+digraph {
+	subgraph "clusterdate (208) x channel (5)" {
+		channel_data [label="channel_data
+~
+Data" shape=box style="rounded, filled"]
+		channel_contribution [label="channel_contribution
+~
+Deterministic" shape=box]
+		label="date (208) x channel (5)" labeljust=r labelloc=b style=rounded
+	}
+	subgraph "clusterdate (208)" {
+		mu [label="mu
+~
+Deterministic" shape=box]
+		y [label="y
+~
+Normal" shape=ellipse style=filled]
+		dayofyear [label="dayofyear
+~
+Data" shape=box style="rounded, filled"]
+		target [label="target
+~
+Data" shape=box style="rounded, filled"]
+		yearly_seasonality_contribution [label="yearly_seasonality_contribution
+~
+Deterministic" shape=box]
+		label="date (208)" labeljust=r labelloc=b style=rounded
+	}
+	intercept [label="intercept
+~
+Normal" shape=ellipse]
+	total_contribution [label="total_contribution
+~
+Deterministic" shape=box]
+	y_sigma [label="y_sigma
+~
+Halfnormal" shape=ellipse]
+	subgraph "clusterchannel (5)" {
+		adstock_alpha [label="adstock_alpha
+~
+Beta" shape=ellipse]
+		saturation_lam [label="saturation_lam
+~
+Gamma" shape=ellipse]
+		saturation_beta [label="saturation_beta
+~
+Halfnormal" shape=ellipse]
+		label="channel (5)" labeljust=r labelloc=b style=rounded
+	}
+	subgraph "clustercontrol (3)" {
+		gamma_control [label="gamma_control
+~
+Normal" shape=ellipse]
+		label="control (3)" labeljust=r labelloc=b style=rounded
+	}
+	subgraph "clusterdate (208) x control (3)" {
+		control_contribution [label="control_contribution
+~
+Deterministic" shape=box]
+		control_data [label="control_data
+~
+Data" shape=box style="rounded, filled"]
+		label="date (208) x control (3)" labeljust=r labelloc=b style=rounded
+	}
+	subgraph "clusterfourier_mode (4)" {
+		gamma_fourier [label="gamma_fourier
+~
+Laplace" shape=ellipse]
+		label="fourier_mode (4)" labeljust=r labelloc=b style=rounded
+	}
+	subgraph "clusterdate (208) x fourier_mode (4)" {
+		fourier_contribution [label="fourier_contribution
+~
+Deterministic" shape=box]
+		label="date (208) x fourier_mode (4)" labeljust=r labelloc=b style=rounded
+	}
+	y -> target
+	channel_data -> channel_contribution
+	adstock_alpha -> channel_contribution
+	saturation_lam -> channel_contribution
+	saturation_beta -> channel_contribution
+	channel_contribution -> total_contribution
+	gamma_control -> control_contribution
+	control_data -> control_contribution
+	gamma_fourier -> fourier_contribution
+	dayofyear -> fourier_contribution
+	gamma_fourier -> yearly_seasonality_contribution
+	dayofyear -> yearly_seasonality_contribution
+	yearly_seasonality_contribution -> mu
+	intercept -> mu
+	channel_contribution -> mu
+	control_contribution -> mu
+	mu -> y
+	y_sigma -> y
+}
